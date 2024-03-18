@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "665256169285",
+    "project_id": "perfecto-noteapp-1",
+    "storage_bucket": "perfecto-noteapp-1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:665256169285:android:29a9e915f723645d8d782c",
+        "android_client_info": {
+          "package_name": "com.example.noteapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDp9r9sDouZcUKLT_tpnG_6j7bvPfYBqGU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:665256169285:android:742639e7124c84dc8d782c",
+        "android_client_info": {
+          "package_name": "com.example.testapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDp9r9sDouZcUKLT_tpnG_6j7bvPfYBqGU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
