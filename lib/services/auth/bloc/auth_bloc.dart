@@ -11,6 +11,46 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       : super(const AuthStateUniniatlzied(
           isLoading: true,
         )) {
+    // Forgot Password
+    on<AuthEventForgotPassword>((event, emit) async {
+      emit(const AuthStateForgotPassword(
+        isLoading: false,
+        exception: null,
+        hasSentEmail: false,
+      ));
+      final email = event.email;
+      if (email == null) {
+        return; // User just wants to go to the forgot password screen
+      }
+      // User has entered an email and wants to reset the password
+      emit(const AuthStateForgotPassword(
+        isLoading: true,
+        exception: null,
+        hasSentEmail: false,
+      ));
+
+      bool didSendEmail;
+      Exception? exception;
+      // Now send the password reset email
+      try {
+        await provider.sendPasswordReset(
+          toEmail: email,
+        );
+        didSendEmail = true;
+        exception = null;
+      } on Exception catch (e) {
+        exception = e;
+        didSendEmail = false;
+      }
+      // Emit the state with the result of the email sending
+      emit(AuthStateForgotPassword(
+        isLoading: false,
+        exception: exception,
+        hasSentEmail: didSendEmail,
+      ));
+    });
+
+    // Go back to the registration screen
     on<AuthEventShouldRegister>((event, emit) {
       emit(
         const AuthStateRegistering(
@@ -21,7 +61,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     // send email verification
-
     on<AuthEventSendEmailVerification>((event, emit) async {
       await provider.sendEmailVerification();
       // For email verification, we are sending an email verification to the user and then emitting the current state as email verification dosen't gives any other state.

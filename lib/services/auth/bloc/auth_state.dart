@@ -14,28 +14,25 @@ abstract class AuthState {
 }
 
 class AuthStateUniniatlzied extends AuthState {
-  const AuthStateUniniatlzied({required bool isLoading})
-      : super(isLoading: isLoading);
+  const AuthStateUniniatlzied({required super.isLoading});
 }
 
 class AuthStateRegistering extends AuthState {
   final Exception? exception;
   const AuthStateRegistering({
-    required isLoading,
+    required super.isLoading,
     required this.exception,
-  }) : super(isLoading: isLoading);
+  });
 }
 
 // AuthStateLoggedIn will hold the user object of the class AuthUser as while loggin in we need the authenticated user.
 class AuthStateLoggedIn extends AuthState {
   final AuthUser user;
-  const AuthStateLoggedIn({required this.user, required bool isLoading})
-      : super(isLoading: isLoading);
+  const AuthStateLoggedIn({required this.user, required super.isLoading});
 }
 
 class AuthStateNeedsVerification extends AuthState {
-  const AuthStateNeedsVerification({required isLoading})
-      : super(isLoading: isLoading);
+  const AuthStateNeedsVerification({required super.isLoading});
 }
 
 // Here the auth state will be logged out and we will hold the exception object in case of failure like the user isn't created but is trying to login then at that case the user will get an exception and the state is still loggedout.
@@ -52,4 +49,16 @@ class AuthStateLoggedOut extends AuthState with EquatableMixin {
 
   @override
   List<Object?> get props => [exception, isLoading];
+}
+
+class AuthStateForgotPassword extends AuthState {
+  final Exception? exception;
+  final bool hasSentEmail;
+
+  const AuthStateForgotPassword({
+    required super.isLoading,
+    super.loadingText,
+    required this.exception,
+    required this.hasSentEmail,
+  });
 }

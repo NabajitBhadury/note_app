@@ -10,6 +10,11 @@ class LoadingScreen {
   LoadingScreen._sharedInstance();
   factory LoadingScreen() => _shared;
 
+
+  LoadingScreenController? controller;
+
+
+  // This function will show the loading screen with the given text
   void show({
     required BuildContext context,
     required String text,
@@ -29,7 +34,6 @@ class LoadingScreen {
     controller = null;
   }
 
-  LoadingScreenController? controller;
   LoadingScreenController showOverlay({
     required BuildContext context,
     required String text,
