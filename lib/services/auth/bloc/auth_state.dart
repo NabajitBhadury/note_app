@@ -38,7 +38,7 @@ class AuthStateNeedsVerification extends AuthState {
 // Here the auth state will be logged out and we will hold the exception object in case of failure like the user isn't created but is trying to login then at that case the user will get an exception and the state is still loggedout.
 // Here we will also hold the isLoading boolean to show the progress indicator based on different states.
 class AuthStateLoggedOut extends AuthState with EquatableMixin {
-  // Here we have used wquatable mixin to compare the objects using the equality as the isLoading has different works for different app states.
+  // Here we have used equatable mixin to compare the objects using the equality as the isLoading has different works for different app states.
   final Exception? exception;
   // ignore: use_super_parameters
   const AuthStateLoggedOut({

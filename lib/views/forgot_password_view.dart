@@ -1,5 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:noteapp/extensions/list/buildcontext/loc.dart';
 import 'package:noteapp/services/auth/bloc/auth_bloc.dart';
 import 'package:noteapp/services/auth/bloc/auth_event.dart';
 import 'package:noteapp/services/auth/bloc/auth_state.dart';
@@ -15,6 +18,9 @@ class ForgotPasswordView extends StatefulWidget {
 
 class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   late final TextEditingController _controller;
+  final _formKey = GlobalKey<FormState>();
+  final RegExp emailValid = RegExp(
+      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$');
 
   @override
   initState() {
@@ -38,51 +44,76 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
             await showPasswordResetSentDialog(context);
           }
           if (state.exception != null) {
-            await showErrorDialog(context,
-                'We could not process your request. Please make sure you are a registered user.');
+            await showErrorDialog(
+              context,
+              context.loc.forgot_password_view_generic_error,
+            );
           }
         }
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Forgot Password'),
+          title: Text(
+            context.loc.forgot_password,
+          ),
         ),
         body: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Column(
-            children: [
-              const Text(
-                'If you forgot your password, please enter your email address below and we will send you a password reset link.',
-              ),
-              TextField(
-                keyboardType: TextInputType.emailAddress,
-                autofocus: true,
-                autocorrect: false,
-                controller: _controller,
-                decoration: const InputDecoration(
-                  hintText: 'Your email address',
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  context.loc.forgot_password_view_prompt,
                 ),
-              ),
-              TextButton(
-                onPressed: () {
-                  final email = _controller.text;
-                  context.read<AuthBloc>().add(
-                        AuthEventForgotPassword(email: email),
-                      );
-                },
-                child: const Text('Send me a password reset link,'),
-              ),
-              TextButton(
-                onPressed: () {
-                  context.read<AuthBloc>().add(
-                        const AuthEventLogout(),
-                      );
-                },
-                child: const Text(
-                  'Back to login page',
+                const SizedBox(
+                  height: 20,
                 ),
-              )
-            ],
+                TextFormField(
+                  keyboardType: TextInputType.emailAddress,
+                  autofocus: true,
+                  autocorrect: false,
+                  controller: _controller,
+                  decoration: const InputDecoration(
+                    labelText: 'Reset Password Email',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Email can't be empty";
+                    } else if (!emailValid.hasMatch(value)) {
+                      return "Invalid email provided";
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                TextButton(
+                  onPressed: () {
+                    final email = _controller.text;
+                    context.read<AuthBloc>().add(
+                          AuthEventForgotPassword(email: email),
+                        );
+                  },
+                  child: Text(
+                    context.loc.password_reset_dialog_prompt,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(
+                          const AuthEventLogout(),
+                        );
+                  },
+                  child: Text(context.loc.forgot_password_view_back_to_login),
+                )
+              ],
+            ),
           ),
         ),
       ),

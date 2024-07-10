@@ -12,6 +12,7 @@ import 'package:noteapp/views/login_view.dart';
 import 'package:noteapp/views/notes/create_update_note_view.dart';
 import 'package:noteapp/views/notes/notes_view.dart';
 import 'package:noteapp/views/register_view.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -26,9 +27,14 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      supportedLocales: AppLocalizations.supportedLocales,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        appBarTheme: const AppBarTheme(
+          color: Colors.cyan,
+        ),
         useMaterial3: true,
       ),
       home: BlocProvider<AuthBloc>(
