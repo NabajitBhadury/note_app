@@ -17,12 +17,14 @@ class _CreateOrUpdateNoteViewState extends State<CreateOrUpdateNoteView> {
   CloudNote? _note;
   late final FirebaseCloudStorage _notesService;
   late final TextEditingController _textController;
+  late final TextEditingController _titleContriller;
 
   @override
   initState() {
     super.initState();
     _notesService = FirebaseCloudStorage();
     _textController = TextEditingController();
+    _titleContriller = TextEditingController();
     super.initState();
   }
 
@@ -33,9 +35,11 @@ class _CreateOrUpdateNoteViewState extends State<CreateOrUpdateNoteView> {
       return;
     }
     final text = _textController.text;
+    final title = _titleContriller.text;
     await _notesService.updateNote(
       documentId: note.documentId,
       text: text,
+      title: title,
     );
   }
 
@@ -43,6 +47,8 @@ class _CreateOrUpdateNoteViewState extends State<CreateOrUpdateNoteView> {
   void _setupTextControllerListener() {
     _textController.removeListener(_textControllerListener);
     _textController.addListener(_textControllerListener);
+    _titleContriller.removeListener(_textControllerListener);
+    _titleContriller.addListener(_textControllerListener);
   }
 
   // This function will check if we have created a note in this view or not if new note is already created then return the note else create a new note so that on every refresh we don't create a new note
@@ -54,6 +60,7 @@ class _CreateOrUpdateNoteViewState extends State<CreateOrUpdateNoteView> {
     if (widgetNote != null) {
       _note = widgetNote;
       _textController.text = widgetNote.text;
+      _titleContriller.text = widgetNote.title;
       return widgetNote;
     }
     final existingNote = _note;
@@ -70,7 +77,7 @@ class _CreateOrUpdateNoteViewState extends State<CreateOrUpdateNoteView> {
   // If the text inside the text editor is empty then delete the note
   void _deleteNoteIfTextIsEmpty() {
     final note = _note;
-    if (_textController.text.isEmpty && note != null) {
+    if (_textController.text.isEmpty && _titleContriller.text.isEmpty && note != null) {
       _notesService.deleteNote(
         documentId: note.documentId,
       );
@@ -82,10 +89,12 @@ class _CreateOrUpdateNoteViewState extends State<CreateOrUpdateNoteView> {
   void _saveNoteIfTextNotEmpty() async {
     final note = _note;
     final text = _textController.text;
+    final title = _titleContriller.text;
     if (note != null && text.isNotEmpty) {
       await _notesService.updateNote(
         documentId: note.documentId,
         text: text,
+        title: title,
       );
     }
   }
@@ -95,6 +104,7 @@ class _CreateOrUpdateNoteViewState extends State<CreateOrUpdateNoteView> {
     _deleteNoteIfTextIsEmpty();
     _saveNoteIfTextNotEmpty();
     _textController.dispose();
+    _titleContriller.dispose();
     super.dispose();
   }
 
@@ -123,13 +133,26 @@ class _CreateOrUpdateNoteViewState extends State<CreateOrUpdateNoteView> {
             switch (snapshot.connectionState) {
               case ConnectionState.done:
                 _setupTextControllerListener();
-                return TextField(
-                  controller: _textController,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  decoration: const InputDecoration(
-                    hintText: 'Write your note here...',
-                  ),
+                return Column(
+                  children: [
+                    TextField(
+                      controller: _titleContriller,
+                      decoration: const InputDecoration(
+                        hintText: 'Title',
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    TextField(
+                      controller: _textController,
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
+                      decoration: const InputDecoration(
+                        hintText: 'Write your note here...',
+                      ),
+                    ),
+                  ],
                 );
 
               default:

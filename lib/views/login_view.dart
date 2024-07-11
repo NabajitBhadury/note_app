@@ -123,7 +123,15 @@ class _LoginViewState extends State<LoginView> {
                     }
                   },
                 ),
-                TextButton(
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    // minimumSize: const Size.fromHeight(50),
+                    backgroundColor: Colors.white60,
+                    fixedSize:const  Size(200, 50)
+                  ),
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       // Grab the email and the password

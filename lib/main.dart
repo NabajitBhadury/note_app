@@ -31,12 +31,15 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromRGBO(57,62,65,1.000)),
+        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+        scaffoldBackgroundColor: const Color.fromRGBO(255,255,179,1.000),
         appBarTheme: const AppBarTheme(
-          color: Colors.cyan,
+          backgroundColor: Color.fromRGBO(255,255,179,1.000),
         ),
         useMaterial3: true,
       ),
+      
       home: BlocProvider<AuthBloc>(
         create: (context) => AuthBloc(
           FirebaseAuthProvider(),

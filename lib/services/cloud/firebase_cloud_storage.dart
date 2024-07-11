@@ -1,3 +1,5 @@
+import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:noteapp/services/cloud/cloud_note.dart';
 import 'package:noteapp/services/cloud/cloud_storage_constants.dart';
@@ -20,9 +22,10 @@ class FirebaseCloudStorage {
   Future<void> updateNote({
     required String documentId,
     required String text,
+    required String title,
   }) async {
     try {
-      await notes.doc(documentId).update({textFieldName: text});
+      await notes.doc(documentId).update({textFieldName: text, titleFieldName: title});
     } catch (e) {
       throw CouldNotUpdateNoteException();
     }
@@ -46,12 +49,15 @@ class FirebaseCloudStorage {
     final document = await notes.add({
       ownerUserIdFieldName: ownerUserId,
       textFieldName: '',
+      createdAtFieldName: FieldValue.serverTimestamp(),
     });
     final fetchedNote = await document.get();
     return CloudNote(
       documentId: fetchedNote.id,
       ownerUserId: ownerUserId,
-      text: '',
+      text: '', 
+      title: '',
+      createdAt: (fetchedNote.get(createdAtFieldName) as Timestamp).toDate(),
     );
   }
 

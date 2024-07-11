@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:intl/intl.dart';
 import 'package:noteapp/utilities/dialogs/show_delete_dialog.dart';
 import 'package:noteapp/services/cloud/cloud_note.dart';
 
@@ -18,32 +20,49 @@ class NotesListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: notes
-          .length, //not to make the listview builder infinite we should have to give the item count
-      itemBuilder: (context, index) {
-        final note = notes.elementAt(index); // show the note based on the index
-        return ListTile(
-          onTap: () {
-            onTap(note);
-          },
-          title: Text(
-            note.text,
-            maxLines: 1,
-            softWrap: true,
-            overflow: TextOverflow.ellipsis,
-          ),
-          trailing: IconButton(
-            onPressed: () async {
-              final shouldDelete = await showDeleteDialog(context);
-              if (shouldDelete) {
-                onDeleteNote(note);
-              }
-            },
-            icon: const Icon(Icons.delete),
-          ),
+    return MasonryGridView.builder(
+        itemCount: notes
+            .length, //not to make the listview builder infinite we should have to give the item count
+        itemBuilder: (context, index) {
+          final note =
+              notes.elementAt(index); // show the note based on the index
+              final creationDate = note.createdAt;
+          return Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Container(
+                color: Colors.blue[100 * (index % 9 + 1)],
+                child: ListTile(
+                  onTap: () {
+                    onTap(note);
+                  },
+                  title: Text(
+                    note.text,
+                    maxLines: 8,
+                    softWrap: true,
+                    overflow: TextOverflow.visible,
+                  ),
+                  // trailing: IconButton(
+                  //   onPressed: () async {
+                  //     final shouldDelete = await showDeleteDialog(context);
+                  //     if (shouldDelete) {
+                  //       onDeleteNote(note);
+                  //     }
+                  //   },
+                  //   icon: const Icon(Icons.delete),
+                  // ),
+                  subtitle: Text(
+                    DateFormat('dd MMM yyyy').format(creationDate),
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                ),
+                
+              ),
+            ),
+          );
+        },
+        gridDelegate: const SliverSimpleGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
         );
-      },
-    );
   }
 }
