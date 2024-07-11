@@ -23,7 +23,9 @@ class FirebaseCloudStorage {
     required String title,
   }) async {
     try {
-      await notes.doc(documentId).update({textFieldName: text, titleFieldName: title});
+      await notes
+          .doc(documentId)
+          .update({textFieldName: text, titleFieldName: title});
     } catch (e) {
       throw CouldNotUpdateNoteException();
     }
@@ -47,13 +49,14 @@ class FirebaseCloudStorage {
     final document = await notes.add({
       ownerUserIdFieldName: ownerUserId,
       textFieldName: '',
+      titleFieldName: '',
       createdAtFieldName: FieldValue.serverTimestamp(),
     });
     final fetchedNote = await document.get();
     return CloudNote(
       documentId: fetchedNote.id,
       ownerUserId: ownerUserId,
-      text: '', 
+      text: '',
       title: '',
       createdAt: (fetchedNote.get(createdAtFieldName) as Timestamp).toDate(),
     );

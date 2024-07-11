@@ -10,13 +10,12 @@ class CloudNote {
   final String title;
   final DateTime createdAt;
 
-  const CloudNote({
-    required this.documentId,
-    required this.ownerUserId,
-    required this.text,
-    required this.title,
-    required this.createdAt
-  });
+  const CloudNote(
+      {required this.documentId,
+      required this.ownerUserId,
+      required this.text,
+      required this.title,
+      required this.createdAt});
 
   // Here we use a constructor to create a CloudNote from a QueryDocumentSnapshot that retrieves data from Firestore.
   CloudNote.fromSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot)
@@ -24,5 +23,7 @@ class CloudNote {
         ownerUserId = snapshot.data()[ownerUserIdFieldName],
         text = snapshot.data()[textFieldName] as String,
         title = snapshot.data()[titleFieldName] as String,
-        createdAt = (snapshot.data()[createdAtFieldName] as Timestamp?)?.toDate() ?? DateTime.now();      
+        createdAt =
+            (snapshot.data()[createdAtFieldName] as Timestamp?)?.toDate() ??
+                DateTime.now();
 }
