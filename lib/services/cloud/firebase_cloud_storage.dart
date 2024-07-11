@@ -1,5 +1,3 @@
-import 'dart:nativewrappers/_internal/vm/lib/core_patch.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:noteapp/services/cloud/cloud_note.dart';
 import 'package:noteapp/services/cloud/cloud_storage_constants.dart';
