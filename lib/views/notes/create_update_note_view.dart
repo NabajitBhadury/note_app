@@ -133,26 +133,33 @@ class _CreateOrUpdateNoteViewState extends State<CreateOrUpdateNoteView> {
             switch (snapshot.connectionState) {
               case ConnectionState.done:
                 _setupTextControllerListener();
-                return Column(
-                  children: [
-                    TextField(
-                      controller: _titleContriller,
-                      decoration: const InputDecoration(
-                        hintText: 'Title',
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    children: [
+                      TextField(
+                        controller: _titleContriller,
+                        decoration: const InputDecoration(
+                          hintText: 'Title',
+                          hintStyle: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold
+                          ),
+                          border: InputBorder.none
+                        ),
                       ),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextField(
-                      controller: _textController,
-                      keyboardType: TextInputType.multiline,
-                      maxLines: null,
-                      decoration: const InputDecoration(
-                        hintText: 'Write your note here...',
+                      
+                      TextField(
+                        controller: _textController,
+                        keyboardType: TextInputType.multiline,
+                        maxLines: null,
+                        decoration: const InputDecoration(
+                          hintText: 'Write your note here...',
+                          border: InputBorder.none
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
 
               default:

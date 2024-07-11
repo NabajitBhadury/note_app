@@ -10,12 +10,14 @@ class NotesListView extends StatelessWidget {
   final void Function(CloudNote note)
       onDeleteNote; // this function is used to delete the notes at the specific index fo database note
   final void Function(CloudNote note) onTap;
+  final void Function(CloudNote note) onLongTap;
 
   const NotesListView({
     super.key,
     required this.notes,
     required this.onDeleteNote,
     required this.onTap,
+    required this.onLongTap,
   });
 
   @override
@@ -35,6 +37,9 @@ class NotesListView extends StatelessWidget {
               child: ListTile(
                 onTap: () {
                   onTap(note);
+                },
+                onLongPress: () {
+                  onLongTap(note);
                 },
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
