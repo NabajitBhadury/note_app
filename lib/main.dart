@@ -1,3 +1,4 @@
+import 'package:context_menus/context_menus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noteapp/constants/routes/routes.dart';
@@ -26,33 +27,36 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      supportedLocales: AppLocalizations.supportedLocales,
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromRGBO(57,62,65,1.000)),
-        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
-        scaffoldBackgroundColor: const Color.fromRGBO(255,255,179,1.000),
-        appBarTheme: const AppBarTheme(
-          backgroundColor: Color.fromRGBO(255,255,179,1.000),
+    // Need to wrap the material app with contextmenuoverlay to show the overlay for note deletion
+    return ContextMenuOverlay(
+      child: MaterialApp(
+        supportedLocales: AppLocalizations.supportedLocales,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(
+              seedColor: const Color.fromRGBO(57, 62, 65, 1.000)),
+          // colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+          scaffoldBackgroundColor: const Color.fromRGBO(255, 255, 179, 1.000),
+          appBarTheme: const AppBarTheme(
+            backgroundColor: Color.fromRGBO(255, 255, 179, 1.000),
+          ),
+          useMaterial3: true,
         ),
-        useMaterial3: true,
-      ),
-      
-      home: BlocProvider<AuthBloc>(
-        create: (context) => AuthBloc(
-          FirebaseAuthProvider(),
+        home: BlocProvider<AuthBloc>(
+          create: (context) => AuthBloc(
+            FirebaseAuthProvider(),
+          ),
+          child: const HomePage(),
         ),
-        child: const HomePage(),
+        routes: {
+          //   loginRoute: (context) => const LoginView(),
+          //   registerRoute: (context) => const RegisterView(),
+          //   notesRoute: (context) => const NotesView(),
+          //   verifyEmailRoute: (context) => const VerifyEmailView(),
+          createOrUpdateNoteRoute: (context) => const CreateOrUpdateNoteView(),
+        },
       ),
-      routes: {
-        //   loginRoute: (context) => const LoginView(),
-        //   registerRoute: (context) => const RegisterView(),
-        //   notesRoute: (context) => const NotesView(),
-        //   verifyEmailRoute: (context) => const VerifyEmailView(),
-        createOrUpdateNoteRoute: (context) => const CreateOrUpdateNoteView(),
-      },
     );
   }
 }

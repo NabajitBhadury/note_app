@@ -77,7 +77,9 @@ class _CreateOrUpdateNoteViewState extends State<CreateOrUpdateNoteView> {
   // If the text inside the text editor is empty then delete the note
   void _deleteNoteIfTextIsEmpty() {
     final note = _note;
-    if (_textController.text.isEmpty && _titleContriller.text.isEmpty && note != null) {
+    if (_textController.text.isEmpty &&
+        _titleContriller.text.isEmpty &&
+        note != null) {
       _notesService.deleteNote(
         documentId: note.documentId,
       );
@@ -117,10 +119,12 @@ class _CreateOrUpdateNoteViewState extends State<CreateOrUpdateNoteView> {
             IconButton(
               onPressed: () async {
                 final text = _textController.text;
-                if (_note == null || text.isEmpty) {
+                final title = _titleContriller.text;
+                if (_note == null || text.isEmpty || title.isEmpty) {
                   await showCannotShareEmptyNoteDialog(context);
                 } else {
-                  Share.share(text);
+                  final shareContent = '$title\n\n$text';
+                  Share.share(shareContent);
                 }
               },
               icon: const Icon(Icons.share),
@@ -140,23 +144,18 @@ class _CreateOrUpdateNoteViewState extends State<CreateOrUpdateNoteView> {
                       TextField(
                         controller: _titleContriller,
                         decoration: const InputDecoration(
-                          hintText: 'Title',
-                          hintStyle: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold
-                          ),
-                          border: InputBorder.none
-                        ),
+                            hintText: 'Title',
+                            hintStyle: TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                            border: InputBorder.none),
                       ),
-                      
                       TextField(
                         controller: _textController,
                         keyboardType: TextInputType.multiline,
                         maxLines: null,
                         decoration: const InputDecoration(
-                          hintText: 'Write your note here...',
-                          border: InputBorder.none
-                        ),
+                            hintText: 'Write your note here...',
+                            border: InputBorder.none),
                       ),
                     ],
                   ),

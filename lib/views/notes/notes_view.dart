@@ -1,5 +1,3 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noteapp/constants/routes/routes.dart';
@@ -10,9 +8,7 @@ import 'package:noteapp/services/auth/bloc/auth_event.dart';
 import 'package:noteapp/services/cloud/cloud_note.dart';
 import 'package:noteapp/services/cloud/firebase_cloud_storage.dart';
 import 'package:noteapp/utilities/dialogs/logout_dialog.dart';
-import 'package:noteapp/utilities/dialogs/show_delete_dialog.dart';
 import 'package:noteapp/views/notes/notes_list_view.dart';
-import 'package:noteapp/services/cloud/cloud_note.dart';
 
 class NotesView extends StatefulWidget {
   const NotesView({super.key});
@@ -45,6 +41,7 @@ class _NotesViewState extends State<NotesView> {
                 case MenuAction.logout:
                   final shouldLogout = await showLogOutDialog(context);
                   if (shouldLogout) {
+                    // ignore: use_build_context_synchronously
                     context.read<AuthBloc>().add(const AuthEventLogout());
                   }
               }
@@ -77,16 +74,12 @@ class _NotesViewState extends State<NotesView> {
                       arguments: note,
                     );
                   },
-                  onLongTap: (note) {
-                    _showSubMenu(context);
-                  },
                   notes: allNotes,
                   onDeleteNote: (note) async {
                     await _notesService.deleteNote(
                       documentId: note.documentId,
                     );
                   },
-                  
                 );
               } else {
                 return const CircularProgressIndicator();
@@ -107,42 +100,3 @@ class _NotesViewState extends State<NotesView> {
     );
   }
 }
-
-
-
-void _showSubMenu(BuildContext context) {
-    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
-
-    showMenu(
-      context: context,
-      position: RelativeRect.fromRect(
-        const Rect.fromLTWH(100, 100, 200, 200),
-        Offset.zero & overlay.size,
-      ),
-      items: [
-        PopupMenuItem<int>(
-          value: 1,
-          child: Text('Option 1'),
-          onTap: ()async{
-            final shouldDeleteNote = await showDeleteDialog(context);
-            if(shouldDeleteNote){
-              deleteNote();
-            }
-          },
-        ),
-        const PopupMenuItem<int>(
-          value: 2,
-          child: Text('Option 2'),
-        ),
-        const PopupMenuItem<int>(
-          value: 3,
-          child: Text('Option 3'),
-        ),
-      ],
-    ).then((value) {
-      if (value != null) {
-        print('Selected option: $value');
-        // Handle the selected option here
-      }
-    });
-  }

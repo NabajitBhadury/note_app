@@ -6,6 +6,7 @@ import 'package:noteapp/services/cloud/cloud_storage_exception.dart';
 class FirebaseCloudStorage {
   // Grab all the firebase notes from the notes collection
   final notes = FirebaseFirestore.instance.collection('notes');
+  String currentNoteId = '';
 
   // Delete the note with the documentId from the notes collection
   Future<void> deleteNote({required String documentId}) async {
@@ -14,6 +15,10 @@ class FirebaseCloudStorage {
     } catch (e) {
       throw CouldNotDeleteNoteException();
     }
+  }
+
+  void setCurrentNoteId(String id) {
+    currentNoteId = id;
   }
 
   // Update the note with the documentId in the notes collection with the text
