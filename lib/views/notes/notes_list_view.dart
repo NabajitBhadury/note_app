@@ -14,50 +14,67 @@ class NotesListView extends StatelessWidget {
   final void Function(CloudNote note) onTap;
   // final void Function(CloudNote note) onLongTap;
 
+  final void Function(CloudNote note) onPinNote;
+
   const NotesListView({
     super.key,
     required this.notes,
     required this.onDeleteNote,
     required this.onTap,
-    // required this.onLongTap,
+    required this.onPinNote,
   });
 
   @override
   Widget build(BuildContext context) {
+    final sortedNote = notes.toList()
+      ..sort(
+        (a, b) {
+          if (a.isPinned && !b.isPinned) return -1;
+          if (!a.isPinned && b.isPinned) return 1;
+          return 0;
+        },
+      );
     return MasonryGridView.builder(
       itemCount: notes
           .length, //not to make the listview builder infinite we should have to give the item count
       itemBuilder: (context, index) {
-        final note = notes.elementAt(index); // show the note based on the index
+        final note = sortedNote[index]; // show the note based on the index
         final creationDate = note.createdAt;
         return ContextMenuRegion(
-          contextMenu: GenericContextMenu(
-            buttonConfigs: [
-              ContextMenuButtonConfig(
-                'Pin',
-                onPressed: () {},
-                icon: const Icon(Icons.push_pin_sharp),
-              ),
-              ContextMenuButtonConfig(
-                'Share',
-                onPressed: () {
-                  String title = note.title;
-                  String body = note.text;
-                  Share.share('$title \n \n $body');
-                },
-                icon: const Icon(Icons.share),
-              ),
-              ContextMenuButtonConfig(
-                'Delete',
-                onPressed: () async {
-                  final shouldDeleteNote = await showDeleteDialog(context);
-                  if (shouldDeleteNote) {
-                    onDeleteNote(note);
-                  }
-                },
-                icon: const Icon(Icons.delete),
-              ),
-            ],
+          contextMenu: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: GenericContextMenu(
+              buttonConfigs: [
+                ContextMenuButtonConfig(
+                  note.isPinned ? 'Unpin' : 'Pin',
+                  onPressed: () {
+                    onPinNote(note);
+                  },
+                  icon: note.isPinned
+                      ? const Icon(Icons.panorama_horizontal_sharp)
+                      : const Icon(Icons.push_pin_sharp),
+                ),
+                ContextMenuButtonConfig(
+                  'Share',
+                  onPressed: () {
+                    String title = note.title;
+                    String body = note.text;
+                    Share.share('$title \n \n $body');
+                  },
+                  icon: const Icon(Icons.share),
+                ),
+                ContextMenuButtonConfig(
+                  'Delete',
+                  onPressed: () async {
+                    final shouldDeleteNote = await showDeleteDialog(context);
+                    if (shouldDeleteNote) {
+                      onDeleteNote(note);
+                    }
+                  },
+                  icon: const Icon(Icons.delete),
+                ),
+              ],
+            ),
           ),
           child: Padding(
             padding: const EdgeInsets.all(6.0),

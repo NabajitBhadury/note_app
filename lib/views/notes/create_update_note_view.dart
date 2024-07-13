@@ -40,6 +40,7 @@ class _CreateOrUpdateNoteViewState extends State<CreateOrUpdateNoteView> {
       documentId: note.documentId,
       text: text,
       title: title,
+      isPinned: note.isPinned,
     );
   }
 
@@ -97,6 +98,7 @@ class _CreateOrUpdateNoteViewState extends State<CreateOrUpdateNoteView> {
         documentId: note.documentId,
         text: text,
         title: title,
+        isPinned: note.isPinned,
       );
     }
   }

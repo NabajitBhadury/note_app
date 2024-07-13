@@ -80,6 +80,15 @@ class _NotesViewState extends State<NotesView> {
                       documentId: note.documentId,
                     );
                   },
+                  onPinNote: (CloudNote note) async {
+                    await _notesService.updateNote(
+                      documentId: note.documentId,
+                      text: note.text,
+                      title: note.title,
+                      isPinned: !note.isPinned,
+                    );
+                    setState(() {});
+                  },
                 );
               } else {
                 return const CircularProgressIndicator();

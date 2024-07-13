@@ -36,7 +36,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
               seedColor: const Color.fromRGBO(57, 62, 65, 1.000)),
-          // colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
           scaffoldBackgroundColor: const Color.fromRGBO(255, 255, 179, 1.000),
           appBarTheme: const AppBarTheme(
             backgroundColor: Color.fromRGBO(255, 255, 179, 1.000),

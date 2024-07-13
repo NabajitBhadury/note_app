@@ -26,11 +26,11 @@ class FirebaseCloudStorage {
     required String documentId,
     required String text,
     required String title,
+    required bool? isPinned,
   }) async {
     try {
-      await notes
-          .doc(documentId)
-          .update({textFieldName: text, titleFieldName: title});
+      await notes.doc(documentId).update(
+          {textFieldName: text, titleFieldName: title, 'isPinned': isPinned});
     } catch (e) {
       throw CouldNotUpdateNoteException();
     }

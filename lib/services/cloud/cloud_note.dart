@@ -9,13 +9,16 @@ class CloudNote {
   final String text;
   final String title;
   final DateTime createdAt;
+  final bool isPinned;
 
-  const CloudNote(
-      {required this.documentId,
-      required this.ownerUserId,
-      required this.text,
-      required this.title,
-      required this.createdAt});
+  const CloudNote({
+    required this.documentId,
+    required this.ownerUserId,
+    required this.text,
+    required this.title,
+    required this.createdAt,
+    this.isPinned = false,
+  });
 
   // Here we use a constructor to create a CloudNote from a QueryDocumentSnapshot that retrieves data from Firestore.
   CloudNote.fromSnapshot(QueryDocumentSnapshot<Map<String, dynamic>> snapshot)
@@ -25,5 +28,6 @@ class CloudNote {
         title = snapshot.data()[titleFieldName] as String,
         createdAt =
             (snapshot.data()[createdAtFieldName] as Timestamp?)?.toDate() ??
-                DateTime.now();
+                DateTime.now(),
+        isPinned = snapshot.data()['isPinned'] as bool? ?? false;
 }
