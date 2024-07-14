@@ -45,15 +45,13 @@ class NotesListView extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             child: GenericContextMenu(
               buttonConfigs: [
-                ContextMenuButtonConfig(
-                  note.isPinned ? 'Unpin' : 'Pin',
-                  onPressed: () {
-                    onPinNote(note);
-                  },
-                  icon: note.isPinned
-                      ? const Icon(Icons.panorama_horizontal_sharp)
-                      : const Icon(Icons.push_pin_sharp),
-                ),
+                ContextMenuButtonConfig(note.isPinned ? 'Unpin' : 'Pin',
+                    onPressed: () {
+                  onPinNote(note);
+                },
+                    icon: note.isPinned
+                        ? const Icon(Icons.push_pin)
+                        : const Icon(Icons.push_pin_outlined)),
                 ContextMenuButtonConfig(
                   'Share',
                   onPressed: () {

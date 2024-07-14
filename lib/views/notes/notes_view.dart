@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noteapp/constants/routes/routes.dart';
-import 'package:noteapp/enums/menu_action.dart';
 import 'package:noteapp/services/auth/auth_service.dart';
 import 'package:noteapp/services/auth/bloc/auth_bloc.dart';
 import 'package:noteapp/services/auth/bloc/auth_event.dart';
@@ -33,28 +32,44 @@ class _NotesViewState extends State<NotesView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Your Notes'),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Image.asset('assets/icon/icon.png'),
+            const Text('Your Notes'),
+          ],
+        ),
         actions: [
-          PopupMenuButton<MenuAction>(
-            onSelected: (value) async {
-              switch (value) {
-                case MenuAction.logout:
-                  final shouldLogout = await showLogOutDialog(context);
-                  if (shouldLogout) {
-                    // ignore: use_build_context_synchronously
-                    context.read<AuthBloc>().add(const AuthEventLogout());
-                  }
+          IconButton(
+            onPressed: () async {
+              final shouldLogout = await showLogOutDialog(context);
+              if (shouldLogout) {
+                // ignore: use_build_context_synchronously
+                context.read<AuthBloc>().add(const AuthEventLogout());
               }
             },
-            itemBuilder: (context) {
-              return const [
-                PopupMenuItem<MenuAction>(
-                  value: MenuAction.logout,
-                  child: Text('Log out'),
-                ),
-              ];
-            },
+            icon: const Icon(Icons.logout),
           )
+          //   PopupMenuButton<MenuAction>(
+          //     onSelected: (value) async {
+          //       switch (value) {
+          //         case MenuAction.logout:
+          //           final shouldLogout = await showLogOutDialog(context);
+          //           if (shouldLogout) {
+          //             // ignore: use_build_context_synchronously
+          //             context.read<AuthBloc>().add(const AuthEventLogout());
+          //           }
+          //       }
+          //     },
+          //     itemBuilder: (context) {
+          //       return const [
+          //         PopupMenuItem<MenuAction>(
+          //           value: MenuAction.logout,
+          //           child: Text('Log out'),
+          //         ),
+          //       ];
+          //     },
+          //   )
         ],
       ),
       body: StreamBuilder(
