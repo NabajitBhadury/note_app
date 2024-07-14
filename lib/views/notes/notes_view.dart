@@ -35,8 +35,22 @@ class _NotesViewState extends State<NotesView> {
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Image.asset('assets/icon/icon.png'),
-            const Text('Your Notes'),
+            ClipOval(
+              child: SizedBox(
+                  width: 40,
+                  height: 40,
+                  child: Image.asset('assets/icon/icon.png')),
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            const Text(
+              'Your Notes',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 26,
+              ),
+            ),
           ],
         ),
         actions: [
@@ -72,46 +86,63 @@ class _NotesViewState extends State<NotesView> {
           //   )
         ],
       ),
-      body: StreamBuilder(
-        stream: _notesService.allNotes(
-            ownerUserId:
-                userId), // this will get all the notes from the notes stream controlller
-        builder: (context, snapshot) {
-          switch (snapshot.connectionState) {
-            case ConnectionState.waiting:
-            case ConnectionState.active:
-              if (snapshot.hasData) {
-                final allNotes = snapshot.data as Iterable<CloudNote>;
-                return NotesListView(
-                  onTap: (note) {
-                    Navigator.of(context).pushNamed(
-                      createOrUpdateNoteRoute,
-                      arguments: note,
-                    );
-                  },
-                  notes: allNotes,
-                  onDeleteNote: (note) async {
-                    await _notesService.deleteNote(
-                      documentId: note.documentId,
-                    );
-                  },
-                  onPinNote: (CloudNote note) async {
-                    await _notesService.updateNote(
-                      documentId: note.documentId,
-                      text: note.text,
-                      title: note.title,
-                      isPinned: !note.isPinned,
-                    );
-                    setState(() {});
-                  },
-                );
-              } else {
-                return const CircularProgressIndicator();
-              }
-            default:
-              return const CircularProgressIndicator();
-          }
-        },
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text(
+              'Your Notes',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 26,
+              ),
+            ),
+          ),
+          Expanded(
+            child: StreamBuilder(
+              stream: _notesService.allNotes(
+                  ownerUserId:
+                      userId), // this will get all the notes from the notes stream controlller
+              builder: (context, snapshot) {
+                switch (snapshot.connectionState) {
+                  case ConnectionState.waiting:
+                  case ConnectionState.active:
+                    if (snapshot.hasData) {
+                      final allNotes = snapshot.data as Iterable<CloudNote>;
+                      return NotesListView(
+                        onTap: (note) {
+                          Navigator.of(context).pushNamed(
+                            createOrUpdateNoteRoute,
+                            arguments: note,
+                          );
+                        },
+                        notes: allNotes,
+                        onDeleteNote: (note) async {
+                          await _notesService.deleteNote(
+                            documentId: note.documentId,
+                          );
+                        },
+                        onPinNote: (CloudNote note) async {
+                          await _notesService.updateNote(
+                            documentId: note.documentId,
+                            text: note.text,
+                            title: note.title,
+                            isPinned: !note.isPinned,
+                          );
+                          setState(() {});
+                        },
+                      );
+                    } else {
+                      return const CircularProgressIndicator();
+                    }
+                  default:
+                    return const CircularProgressIndicator();
+                }
+              },
+            ),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
