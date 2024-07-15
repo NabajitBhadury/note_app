@@ -106,9 +106,12 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 ),
                 TextButton(
                   onPressed: () {
-                    context.read<AuthBloc>().add(
-                          const AuthEventLogout(),
-                        );
+                    if (_formKey.currentState!.validate()) {
+                      final email = _controller.text;
+                      context.read<AuthBloc>().add(
+                            AuthEventForgotPassword(email: email),
+                          );
+                    }
                   },
                   child: Text(context.loc.forgot_password_view_back_to_login),
                 )
