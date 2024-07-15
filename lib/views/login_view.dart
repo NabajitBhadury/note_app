@@ -52,6 +52,7 @@ class _LoginViewState extends State<LoginView> {
               'Wrong Credentials',
             );
           } else if (state.exception is GenericAuthException) {
+            print('exception : $state.exception');
             await showErrorDialog(
               context,
               'Authentication failed',
@@ -63,113 +64,109 @@ class _LoginViewState extends State<LoginView> {
         appBar: AppBar(
           title: const Text('Login'),
         ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Please login to create notes'),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      textInputAction: TextInputAction.next,
-                      controller: _emailcontroller,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        labelText: 'Email address',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15.0),
-                          ),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Email can't be empty";
-                        } else if (!emailValid.hasMatch(value)) {
-                          return "Invalid email provided";
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      controller: _passwordcontroller,
-                      textInputAction: TextInputAction.next,
-                      obscureText: true,
-                      enableSuggestions: false,
-                      autocorrect: false,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15.0),
-                          ),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a valid password';
-                        } else if (value.length < 6) {
-                          return "Password must be at least of 6 characters";
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                          // minimumSize: const Size.fromHeight(50),
-                          backgroundColor: Colors.white60,
-                          fixedSize: const Size(200, 50)),
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          // Grab the email and the password
-                          final email = _emailcontroller.text;
-                          final password = _passwordcontroller.text;
-                          // Add the AuthEventLogin event to the AuthBloc using the add method that notifies the bloc of the event and the read function to get the AuthBloc instance
-                          context.read<AuthBloc>().add(
-                                AuthEventLogin(
-                                  email,
-                                  password,
-                                ),
-                              );
-                        }
-                      },
-                      child: Text(context.loc.login),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        context.read<AuthBloc>().add(
-                              const AuthEventShouldRegister(),
-                            );
-                      },
-                      child: const Text('Yet not registered, please register'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        context.read<AuthBloc>().add(
-                              const AuthEventForgotPassword(),
-                            );
-                      },
-                      child: const Text(
-                        'I forgot my password, please help me reset it',
-                      ),
-                    ),
-                  ],
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Please login to create notes'),
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
+                TextFormField(
+                  textInputAction: TextInputAction.next,
+                  controller: _emailcontroller,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    labelText: 'Email address',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Email can't be empty";
+                    } else if (!emailValid.hasMatch(value)) {
+                      return "Invalid email provided";
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  controller: _passwordcontroller,
+                  textInputAction: TextInputAction.next,
+                  obscureText: true,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a valid password';
+                    } else if (value.length < 6) {
+                      return "Password must be at least of 6 characters";
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                      // minimumSize: const Size.fromHeight(50),
+                      backgroundColor: Colors.white60,
+                      fixedSize: const Size(200, 50)),
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      // Grab the email and the password
+                      final email = _emailcontroller.text;
+                      final password = _passwordcontroller.text;
+                      // Add the AuthEventLogin event to the AuthBloc using the add method that notifies the bloc of the event and the read function to get the AuthBloc instance
+                      context.read<AuthBloc>().add(
+                            AuthEventLogin(
+                              email,
+                              password,
+                            ),
+                          );
+                    }
+                  },
+                  child: Text(context.loc.login),
+                ),
+                TextButton(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(
+                          const AuthEventShouldRegister(),
+                        );
+                  },
+                  child: const Text('Yet not registered, please register'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(
+                          const AuthEventForgotPassword(),
+                        );
+                  },
+                  child: const Text(
+                    'I forgot my password, please help me reset it',
+                  ),
+                ),
+              ],
             ),
           ),
         ),

@@ -4,6 +4,7 @@ import 'package:noteapp/constants/routes/routes.dart';
 import 'package:noteapp/services/auth/auth_service.dart';
 import 'package:noteapp/services/auth/bloc/auth_bloc.dart';
 import 'package:noteapp/services/auth/bloc/auth_event.dart';
+import 'package:noteapp/services/auth/bloc/auth_state.dart';
 import 'package:noteapp/services/cloud/cloud_note.dart';
 import 'package:noteapp/services/cloud/firebase_cloud_storage.dart';
 import 'package:noteapp/utilities/dialogs/logout_dialog.dart';
@@ -21,6 +22,7 @@ class _NotesViewState extends State<NotesView> {
 
   // Get the user email from the firebase user so that we should have the notes of the user with the corresponding logged in gmail
   String get userId => AuthService.firebase().currentUser!.id;
+
   @override
   void initState() {
     // Create an instance of the notes service class
@@ -44,12 +46,26 @@ class _NotesViewState extends State<NotesView> {
             const SizedBox(
               width: 10,
             ),
-            const Text(
-              'Your Notes',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 26,
-              ),
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                if (state is AuthStateLoggedIn) {
+                  return Text(
+                    'Welcome, ${state.user.userName}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26,
+                    ),
+                  );
+                } else {
+                  return const Text(
+                    'Your Notes',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 26,
+                    ),
+                  );
+                }
+              },
             ),
           ],
         ),
@@ -64,26 +80,6 @@ class _NotesViewState extends State<NotesView> {
             },
             icon: const Icon(Icons.logout),
           )
-          //   PopupMenuButton<MenuAction>(
-          //     onSelected: (value) async {
-          //       switch (value) {
-          //         case MenuAction.logout:
-          //           final shouldLogout = await showLogOutDialog(context);
-          //           if (shouldLogout) {
-          //             // ignore: use_build_context_synchronously
-          //             context.read<AuthBloc>().add(const AuthEventLogout());
-          //           }
-          //       }
-          //     },
-          //     itemBuilder: (context) {
-          //       return const [
-          //         PopupMenuItem<MenuAction>(
-          //           value: MenuAction.logout,
-          //           child: Text('Log out'),
-          //         ),
-          //       ];
-          //     },
-          //   )
         ],
       ),
       body: Column(
@@ -103,7 +99,7 @@ class _NotesViewState extends State<NotesView> {
             child: StreamBuilder(
               stream: _notesService.allNotes(
                   ownerUserId:
-                      userId), // this will get all the notes from the notes stream controlller
+                      userId), // this will get all the notes from the notes stream controller
               builder: (context, snapshot) {
                 switch (snapshot.connectionState) {
                   case ConnectionState.waiting:

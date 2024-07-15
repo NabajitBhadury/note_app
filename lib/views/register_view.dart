@@ -17,6 +17,7 @@ class RegisterView extends StatefulWidget {
 }
 
 class _RegisterViewState extends State<RegisterView> {
+  late final TextEditingController _userNameController;
   late final TextEditingController _emailcontroller;
   late final TextEditingController _passwordcontroller;
   late final TextEditingController _confirmPasswordcontroller;
@@ -26,6 +27,7 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   void initState() {
+    _userNameController = TextEditingController();
     _emailcontroller = TextEditingController();
     _passwordcontroller = TextEditingController();
     _confirmPasswordcontroller = TextEditingController();
@@ -34,6 +36,7 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   void dispose() {
+    _userNameController.dispose();
     _emailcontroller.dispose();
     _passwordcontroller.dispose();
     _confirmPasswordcontroller.dispose();
@@ -72,120 +75,116 @@ class _RegisterViewState extends State<RegisterView> {
         appBar: AppBar(
           title: const Text('Register'),
         ),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text('Please register to create or view your notes'),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      textInputAction: TextInputAction.next,
-                      controller: _emailcontroller,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        labelText: 'Email address',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15.0),
-                          ),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Email can't be empty";
-                        } else if (!emailValid.hasMatch(value)) {
-                          return "Invalid email provided";
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      controller: _passwordcontroller,
-                      textInputAction: TextInputAction.next,
-                      obscureText: true,
-                      enableSuggestions: false,
-                      autocorrect: false,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15.0),
-                          ),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a valid password';
-                        } else if (value.length < 6) {
-                          return "Password must be at least of 6 characters";
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    TextFormField(
-                      controller: _confirmPasswordcontroller,
-                      textInputAction: TextInputAction.next,
-                      obscureText: true,
-                      enableSuggestions: false,
-                      autocorrect: false,
-                      decoration: const InputDecoration(
-                        labelText: 'Confrim Password',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(15.0),
-                          ),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a valid password';
-                        } else if (_passwordcontroller !=
-                            _confirmPasswordcontroller) {
-                          return "Make sure that the confirmed password is same as the current one";
-                        } else {
-                          return null;
-                        }
-                      },
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        // Grab the email and the password
-                        if (_formKey.currentState!.validate()) {
-                          final email = _emailcontroller.text;
-                          final password = _passwordcontroller.text;
-                          context.read<AuthBloc>().add(
-                                AuthEventRegister(email, password),
-                              );
-                        }
-                      },
-                      child: Text(context.loc.register),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        context.read<AuthBloc>().add(
-                              const AuthEventLogout(),
-                            );
-                      },
-                      child: const Text('Already Registerd login here'),
-                    )
-                  ],
+        body: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text('Please register to create or view your notes'),
+                const SizedBox(
+                  height: 20,
                 ),
-              ),
+                TextFormField(
+                  textInputAction: TextInputAction.next,
+                  controller: _emailcontroller,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration: const InputDecoration(
+                    labelText: 'Email address',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return "Email can't be empty";
+                    } else if (!emailValid.hasMatch(value)) {
+                      return "Invalid email provided";
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  controller: _passwordcontroller,
+                  textInputAction: TextInputAction.next,
+                  obscureText: true,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                    labelText: 'Password',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a valid password';
+                    } else if (value.length < 6) {
+                      return "Password must be at least of 6 characters";
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  controller: _confirmPasswordcontroller,
+                  textInputAction: TextInputAction.next,
+                  obscureText: true,
+                  enableSuggestions: false,
+                  autocorrect: false,
+                  decoration: const InputDecoration(
+                    labelText: 'Confrim Password',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(15.0),
+                      ),
+                    ),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a valid password';
+                    } else if (_passwordcontroller !=
+                        _confirmPasswordcontroller) {
+                      return "Make sure that the confirmed password is same as the current one";
+                    } else {
+                      return null;
+                    }
+                  },
+                ),
+                TextButton(
+                  onPressed: () async {
+                    // Grab the email and the password
+                    if (_formKey.currentState!.validate()) {
+                      final email = _emailcontroller.text;
+                      final password = _passwordcontroller.text;
+                      context.read<AuthBloc>().add(
+                            AuthEventRegister(email, password),
+                          );
+                    }
+                  },
+                  child: Text(context.loc.register),
+                ),
+                TextButton(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(
+                          const AuthEventLogout(),
+                        );
+                  },
+                  child: const Text('Already Registerd login here'),
+                )
+              ],
             ),
           ),
         ),

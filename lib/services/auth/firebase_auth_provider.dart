@@ -1,10 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:noteapp/firebase_options.dart';
 import 'package:noteapp/services/auth/auth_exceptions.dart';
 import 'package:noteapp/services/auth/auth_provider.dart';
 import 'package:noteapp/services/auth/auth_user.dart';
 import 'package:firebase_auth/firebase_auth.dart'
-    show FirebaseAuth, FirebaseAuthException;
+    show FirebaseAuth, FirebaseAuthException, User, UserCredential;
 
 // Here we create a class FirebaseAuthProvider that implements the AuthProvider abstract class and put here the functionality of the firebase authentication services and will hereby use this class to implement the firebase authentication services
 
@@ -20,14 +21,19 @@ class FirebaseAuthProvider implements AuthProvider {
   Future<AuthUser> createUser({
     required String email,
     required String password,
+    required String userName,
   }) async {
     try {
-      await FirebaseAuth.instance
+      UserCredential userCredential = await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: password);
 
-      final user = currentUser;
+      User? user = userCredential.user;
       if (user != null) {
-        return user;
+        await FirebaseFirestore.instance.collection('user').doc(user.uid).set({
+          'username': userName,
+          'email': email,
+        });
+        return AuthUser.fromFirebase(user, userName: userName);
       } else {
         throw UserNotLoggedInAuthException();
       }
@@ -56,19 +62,30 @@ class FirebaseAuthProvider implements AuthProvider {
     }
   }
 
+  Future<String?> _getUsername(String userId) async {
+    final doc =
+        await FirebaseFirestore.instance.collection('user').doc(userId).get();
+    if (doc.exists) {
+      return doc.data()?['username'];
+    } else {
+      return null;
+    }
+  }
+
   @override
   Future<AuthUser> login({
     required String email,
     required String password,
   }) async {
     try {
-      await FirebaseAuth.instance
+      UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
 
-      final user = currentUser;
+      User? user = userCredential.user;
 
       if (user != null) {
-        return user;
+        final userName = await _getUsername(user.uid);
+        return AuthUser.fromFirebase(user, userName: userName);
       } else {
         throw UserNotLoggedInAuthException();
       }
