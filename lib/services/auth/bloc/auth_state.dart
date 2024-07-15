@@ -28,7 +28,12 @@ class AuthStateRegistering extends AuthState {
 // AuthStateLoggedIn will hold the user object of the class AuthUser as while loggin in we need the authenticated user.
 class AuthStateLoggedIn extends AuthState {
   final AuthUser user;
-  const AuthStateLoggedIn({required this.user, required super.isLoading});
+  const AuthStateLoggedIn({
+    required this.user,
+    required super.isLoading,
+  });
+
+  List<Object> get props => [user];
 }
 
 class AuthStateNeedsVerification extends AuthState {

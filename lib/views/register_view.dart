@@ -167,10 +167,11 @@ class _RegisterViewState extends State<RegisterView> {
                   onPressed: () async {
                     // Grab the email and the password
                     if (_formKey.currentState!.validate()) {
+                      final username = _userNameController.text;
                       final email = _emailcontroller.text;
                       final password = _passwordcontroller.text;
                       context.read<AuthBloc>().add(
-                            AuthEventRegister(email, password),
+                            AuthEventRegister(email, password, username),
                           );
                     }
                   },

@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:noteapp/services/auth/auth_provider.dart';
 import 'package:noteapp/services/auth/bloc/auth_event.dart';
 import 'package:noteapp/services/auth/bloc/auth_state.dart';
+import 'package:noteapp/services/auth/firebase_auth_provider.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   // Here we are initializing the AuthBloc with the AuthProvider and the initial state of the bloc is AuthStateLoading.
@@ -89,7 +90,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
     on<AuthEventInitialize>((event, emit) async {
       await provider.initialize();
-      final user = provider.currentUser;
+      final user =
+          await (provider as FirebaseAuthProvider).getCurrentUserWithDetails();
       if (user == null) {
         emit(const AuthStateLoggedOut(
           exception: null,
@@ -98,7 +100,10 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } else if (!user.isEmailVerified) {
         emit(const AuthStateNeedsVerification(isLoading: false));
       } else {
-        emit(AuthStateLoggedIn(user: user, isLoading: false));
+        emit(AuthStateLoggedIn(
+          user: user,
+          isLoading: false,
+        ));
       }
     });
 

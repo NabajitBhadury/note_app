@@ -56,7 +56,9 @@ class FirebaseAuthProvider implements AuthProvider {
   AuthUser? get currentUser {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      return AuthUser.fromFirebase(user);
+      return AuthUser.fromFirebase(
+        user,
+      );
     } else {
       return null;
     }
@@ -67,6 +69,16 @@ class FirebaseAuthProvider implements AuthProvider {
         await FirebaseFirestore.instance.collection('user').doc(userId).get();
     if (doc.exists) {
       return doc.data()?['username'];
+    } else {
+      return null;
+    }
+  }
+
+  Future<AuthUser?> getCurrentUserWithDetails() async {
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      final userName = await _getUsername(user.uid);
+      return AuthUser.fromFirebase(user, userName: userName);
     } else {
       return null;
     }

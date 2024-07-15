@@ -4,14 +4,14 @@ import 'package:noteapp/constants/routes/routes.dart';
 import 'package:noteapp/services/auth/auth_service.dart';
 import 'package:noteapp/services/auth/bloc/auth_bloc.dart';
 import 'package:noteapp/services/auth/bloc/auth_event.dart';
-import 'package:noteapp/services/auth/bloc/auth_state.dart';
 import 'package:noteapp/services/cloud/cloud_note.dart';
 import 'package:noteapp/services/cloud/firebase_cloud_storage.dart';
 import 'package:noteapp/utilities/dialogs/logout_dialog.dart';
 import 'package:noteapp/views/notes/notes_list_view.dart';
 
 class NotesView extends StatefulWidget {
-  const NotesView({super.key});
+  final String username;
+  const NotesView({super.key, required this.username});
 
   @override
   State<NotesView> createState() => _NotesViewState();
@@ -46,27 +46,13 @@ class _NotesViewState extends State<NotesView> {
             const SizedBox(
               width: 10,
             ),
-            BlocBuilder<AuthBloc, AuthState>(
-              builder: (context, state) {
-                if (state is AuthStateLoggedIn) {
-                  return Text(
-                    'Welcome, ${state.user.userName}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 26,
-                    ),
-                  );
-                } else {
-                  return const Text(
-                    'Your Notes',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 26,
-                    ),
-                  );
-                }
-              },
-            ),
+            Text(
+              'Welcome ${widget.username}',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 26,
+              ),
+            )
           ],
         ),
         actions: [

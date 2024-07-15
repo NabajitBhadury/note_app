@@ -38,23 +38,23 @@ void main() {
     );
 
     test('Create user should deligate to login function', () async {
-      final badEmailUser =
-          provider.createUser(email: 'foo@bar.com', password: 'password');
+      final badEmailUser = provider.createUser(
+          email: 'foo@bar.com', password: 'password', userName: 'foo');
       expect(
           badEmailUser,
           throwsA(
             isA<UserNotFoundAuthException>(),
           ));
 
-      final badPassword =
-          provider.createUser(email: 'hello@gmail.com', password: 'foobarbazz');
+      final badPassword = provider.createUser(
+          email: 'hello@gmail.com', password: 'foobarbazz', userName: 'foo');
       expect(
           badPassword,
           throwsA(
             isA<WrongPasswordAuthException>(),
           ));
-      final user =
-          await provider.createUser(email: 'foo', password: 'perfecto');
+      final user = await provider.createUser(
+          email: 'foo', password: 'perfecto', userName: 'foo');
       expect(provider.currentUser, user);
       expect(user.isEmailVerified, false);
     });
@@ -87,10 +87,11 @@ class MockAuthProvider implements AuthProvider {
   Future<AuthUser> createUser({
     required String email,
     required String password,
+    required String userName,
   }) async {
     if (!isInitialized) throw NotInitializedException();
     Future.delayed(const Duration(seconds: 1));
-    return login(email: email, password: password);
+    return login(email: email, password: password, username: userName);
   }
 
   @override
@@ -106,15 +107,16 @@ class MockAuthProvider implements AuthProvider {
   Future<AuthUser> login({
     required String email,
     required String password,
+    String? username,
   }) async {
     if (!isInitialized) throw NotInitializedException();
     if (email == 'foo@bar.com') throw UserNotFoundAuthException();
     if (password == 'foobarbazz') throw WrongPasswordAuthException();
-    const user = AuthUser(
-      isEmailVerified: false,
-      email: 'foo@bar.com',
-      id: 'my_id_',
-    );
+    final user = AuthUser(
+        isEmailVerified: false,
+        email: 'foo@bar.com',
+        id: 'my_id_',
+        userName: username ?? 'foo');
     _user = user;
     return Future.value(user);
   }
