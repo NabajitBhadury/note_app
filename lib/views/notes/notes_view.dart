@@ -43,7 +43,6 @@ class _NotesViewState extends State<NotesView> {
   void _onSearchTextChanged() {
     setState(() {
       _searchQuery = _searchKeyController.text.toLowerCase();
-      print('Search query: $_searchQuery');
     });
   }
 

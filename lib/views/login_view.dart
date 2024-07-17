@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noteapp/extensions/list/buildcontext/loc.dart';
+import 'package:noteapp/helpers/shared/avatar_image.dart';
 import 'package:noteapp/services/auth/auth_exceptions.dart';
 import 'package:noteapp/services/auth/bloc/auth_bloc.dart';
 import 'package:noteapp/services/auth/bloc/auth_event.dart';
@@ -52,7 +54,6 @@ class _LoginViewState extends State<LoginView> {
               'Wrong Credentials',
             );
           } else if (state.exception is GenericAuthException) {
-            print('exception : $state.exception');
             await showErrorDialog(
               context,
               'Authentication failed',
@@ -61,9 +62,6 @@ class _LoginViewState extends State<LoginView> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Login'),
-        ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Form(
@@ -71,7 +69,14 @@ class _LoginViewState extends State<LoginView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Please login to create notes'),
+                const AvatarImage(),
+                const Text(
+                  'Please login to create notes',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
@@ -147,6 +152,9 @@ class _LoginViewState extends State<LoginView> {
                     }
                   },
                   child: Text(context.loc.login),
+                ),
+                const SizedBox(
+                  height: 20,
                 ),
                 TextButton(
                   onPressed: () {

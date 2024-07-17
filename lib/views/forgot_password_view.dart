@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noteapp/extensions/list/buildcontext/loc.dart';
+import 'package:noteapp/helpers/shared/avatar_image.dart';
 import 'package:noteapp/services/auth/bloc/auth_bloc.dart';
 import 'package:noteapp/services/auth/bloc/auth_event.dart';
 import 'package:noteapp/services/auth/bloc/auth_state.dart';
@@ -52,20 +53,20 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            context.loc.forgot_password,
-          ),
-        ),
         body: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(16.0),
           child: Form(
             key: _formKey,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                const AvatarImage(),
                 Text(
                   context.loc.forgot_password_view_prompt,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
                 const SizedBox(
                   height: 20,
@@ -93,6 +94,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                     }
                   },
                 ),
+                const SizedBox(
+                  height: 20,
+                ),
                 TextButton(
                   onPressed: () {
                     final email = _controller.text;
@@ -106,12 +110,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                 ),
                 TextButton(
                   onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      final email = _controller.text;
-                      context.read<AuthBloc>().add(
-                            AuthEventForgotPassword(email: email),
-                          );
-                    }
+                    context.read<AuthBloc>().add(const AuthEventLogout());
                   },
                   child: Text(context.loc.forgot_password_view_back_to_login),
                 )

@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:noteapp/extensions/list/buildcontext/loc.dart';
+import 'package:noteapp/helpers/shared/avatar_image.dart';
 import 'package:noteapp/services/auth/auth_exceptions.dart';
 import 'package:noteapp/services/auth/bloc/auth_bloc.dart';
 import 'package:noteapp/services/auth/bloc/auth_event.dart';
@@ -72,9 +73,6 @@ class _RegisterViewState extends State<RegisterView> {
         }
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Register'),
-        ),
         body: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Form(
@@ -82,7 +80,14 @@ class _RegisterViewState extends State<RegisterView> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text('Please register to create or view your notes'),
+                const AvatarImage(),
+                const Text(
+                  'Please register to create your notes',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
                 const SizedBox(
                   height: 20,
                 ),
