@@ -8,13 +8,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
-
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -44,10 +38,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Set up Node.js 20
-        uses: actions/setup-node@v3
-        with:
-          node-version: '20'
 
       - name: Download APK artifact
         uses: actions/download-artifact@v3
