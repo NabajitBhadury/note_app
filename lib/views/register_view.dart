@@ -119,7 +119,6 @@ class _RegisterViewState extends State<RegisterView> {
                 TextFormField(
                   controller: _passwordcontroller,
                   textInputAction: TextInputAction.next,
-                  obscureText: true,
                   enableSuggestions: false,
                   autocorrect: false,
                   decoration: const InputDecoration(
@@ -146,7 +145,6 @@ class _RegisterViewState extends State<RegisterView> {
                 TextFormField(
                   controller: _confirmPasswordcontroller,
                   textInputAction: TextInputAction.next,
-                  obscureText: true,
                   enableSuggestions: false,
                   autocorrect: false,
                   decoration: const InputDecoration(
@@ -160,9 +158,6 @@ class _RegisterViewState extends State<RegisterView> {
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please enter a valid password';
-                    } else if (_passwordcontroller !=
-                        _confirmPasswordcontroller) {
-                      return "Make sure that the confirmed password is same as the current one";
                     } else {
                       return null;
                     }
